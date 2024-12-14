@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Attendee Home</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upcoming Events</h1>
+
+        <% if (events.length===0) { %>
+            <p>No events are currently available.</p>
+            <% } else { %>
+                <div class="events-list">
+                    <% events.forEach(event=> { %>
+                        <div class="event-card">
+                            <h2>
+                                <%= event.title %>
+                            </h2>
+                            <p>Date: <%= new Date(event.event_date).toLocaleString() %>
+                            </p>
+                            <a href="/events/attendee/<%= event.id %>" class="btn">View Details</a>
+                        </div>
+                        <% }); %>
+                </div>
+                <% } %>
+    </div>
+</body>
+
+</html>

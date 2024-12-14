@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Site Settings</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Site Settings</h1>
+        <form action="/site-settings" method="POST">
+            <div class="form-group">
+                <label for="name">Site Name</label>
+                <input type="text" id="name" name="name" value="<%= settings.name %>" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Site Description</label>
+                <textarea id="description" name="description" required><%= settings.description %></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+                <a href="/events/organiser" class="btn">Back</a>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

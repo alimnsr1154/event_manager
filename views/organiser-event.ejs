@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Edit Event</h1>
+        <p>Created: <%= new Date(event.created_at).toLocaleString() %>
+        </p>
+
+        <form action="/events/edit/<%= event.id %>" method="POST">
+            <div class="form-group">
+                <label for="title">Event Title</label>
+                <input type="text" id="title" name="title" value="<%= event.title %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Event Description</label>
+                <textarea id="description" name="description" required><%= event.description %></textarea>
+            </div>
+
+            <div class="ticket-group">
+                <div class="form-group">
+                    <label for="full_price_tickets">Full Price Tickets</label>
+                    <input type="number" id="full_price_tickets" name="full_price_tickets"
+                        value="<%= event.full_price_tickets %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="full_price_cost">Full Price Cost</label>
+                    <input type="number" step="0.01" id="full_price_cost" name="full_price_cost"
+                        value="<%= event.full_price_cost %>" required>
+                </div>
+            </div>
+
+            <div class="ticket-group">
+                <div class="form-group">
+                    <label for="concession_tickets">Concession Tickets</label>
+                    <input type="number" id="concession_tickets" name="concession_tickets"
+                        value="<%= event.concession_tickets %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="concession_price">Concession Price</label>
+                    <input type="number" step="0.01" id="concession_price" name="concession_price"
+                        value="<%= event.concession_price %>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="event_date">Event Date</label>
+                <input type="datetime-local" id="event_date" name="event_date"
+                    value="<%= new Date(event.event_date).toISOString().slice(0,16) %>" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/events/organiser" class="btn">Back</a>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

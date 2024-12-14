@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Organiser Home</title>
+    <link rel="stylesheet" href="/main.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --background-color: #f7f9fc;
+            --text-color: #2c3e50;
+            --border-color: #ecf0f1;
+        }
+
+        .events-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .events-section {
+            width: 48%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            /* Optional: Set text color to white for contrast */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Organiser Home</h1>
+
+        <div class="site-info">
+            <a href="/site-settings" class="btn">Site Settings</a>
+        </div>
+
+        <div class="create-event">
+            <a href="/events/new" class="btn btn-primary">Create New Event</a>
+        </div>
+
+        <div class="events-container">
+            <div class="events-section">
+                <h2>Published Events</h2>
+                <% if (events.filter(e=> e.status === 'published').length === 0) { %>
+                    <p>No published events</p>
+                    <% } else { %>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Created</th>
+                                    <th>Tickets</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% events.filter(e=> e.status === 'published').forEach(event => { %>
+                                    <tr class="published-event">
+                                        <td>
+                                            <%= event.title %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(event.event_date).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(event.created_at).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            Full: <%= event.full_price_tickets %><br>
+                                                Concession: <%= event.concession_tickets %>
+                                        </td>
+                                        <td>
+                                            <form action="/events/delete/<%= event.id %>" method="POST">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <% } %>
+            </div>
+
+            <div class="events-section">
+                <h2>Draft Events</h2>
+                <% if (events.filter(e=> e.status === 'draft').length === 0) { %>
+                    <p>No draft events</p>
+                    <% } else { %>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Created</th>
+                                    <th>Tickets</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% events.filter(e=> e.status === 'draft').forEach(event => { %>
+                                    <tr>
+                                        <td>
+                                            <%= event.title %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(event.event_date).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(event.created_at).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            Full: <%= event.full_price_tickets %><br>
+                                                Concession: <%= event.concession_tickets %>
+                                        </td>
+                                        <td>
+                                            <a href="/events/edit/<%= event.id %>" class="btn btn-edit">Edit</a>
+                                            <form action="/events/publish/<%= event.id %>" method="POST"
+                                                style="display:inline;">
+                                                <button type="submit" class="btn btn-publish">Publish</button>
+                                            </form>
+                                            <form action="/events/delete/<%= event.id %>" method="POST"
+                                                style="display:inline;">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
