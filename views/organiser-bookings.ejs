@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>All Bookings for Event</title>
+    <link rel="stylesheet" href="/main.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --background-color: #f7f9fc;
+            --text-color: #2c3e50;
+            --border-color: #ecf0f1;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            margin: 0 auto;
+            width: 80%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>All Bookings for Event</h1>
+
+    <div class="table-container">
+        <% if (bookings.length===0) { %>
+            <p>No bookings available for this event.</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Attendee Name</th>
+                            <th>Full Price Tickets</th>
+                            <th>Concession Tickets</th>
+                            <th>Booking Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bookings.forEach(booking=> { %>
+                            <tr>
+                                <td>
+                                    <%= booking.attendee_name %>
+                                </td>
+                                <td>
+                                    <%= booking.full_price_tickets %>
+                                </td>
+                                <td>
+                                    <%= booking.concession_tickets %>
+                                </td>
+                                <td>
+                                    <%= new Date(booking.booking_date).toLocaleString() %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+                <% } %>
+    </div>
+
+    <a href="/events/organiser" class="btn-back">Back to Organizer Home</a>
+</body>
+
+</html>

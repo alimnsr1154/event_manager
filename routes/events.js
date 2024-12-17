@@ -150,16 +150,28 @@ router.post('/book/:id', (req, res) => {
     });
 });
 
+
 // Organizer - View All Bookings for an Event
 router.get('/organiser/event/:id/bookings', (req, res) => {
-    db.all(`
+    const eventId = req.params.id;
+    console.log(`Received request for bookings of event ID: ${eventId}`);
+
+
+    const query = `
         SELECT b.id, b.attendee_name, b.full_price_tickets, 
         b.concession_tickets, b.booking_date
         FROM bookings b
         WHERE b.event_id = ?
-    `, [req.params.id], (err, bookings) => {
-        if (err) return res.status(500).send('Error retrieving bookings');
-        res.render('organizer-bookings', { bookings, eventId: req.params.id });
+    `;
+    console.log(`Executing SQL query: ${query}`);
+
+    db.all(query, [eventId], (err, bookings) => {
+        if (err) {
+            console.error('Error retrieving bookings:', err);
+            return res.status(500).send('Error retrieving bookings');
+        }
+        console.log('Bookings retrieved successfully:', bookings);
+        res.render('organiser-bookings', { bookings, eventId });
     });
 });
 

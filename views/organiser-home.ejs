@@ -41,6 +41,22 @@
             color: white;
             /* Optional: Set text color to white for contrast */
         }
+
+        .btn-info {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+            /* Darker shade of primary color */
+        }
     </style>
 </head>
 
@@ -89,9 +105,13 @@
                                                 Concession: <%= event.concession_tickets %>
                                         </td>
                                         <td>
-                                            <form action="/events/delete/<%= event.id %>" method="POST">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            <form action="/events/delete/<%= event.id %>" method="POST"
+                                                style="display: inline;">
+                                                <button type="submit" class="btn btn-danger"
+                                                    style="margin-bottom: 5px;">Delete</button>
                                             </form>
+                                            <a href="/events/organiser/event/<%= event.id %>/bookings"
+                                                class="btn btn-info">Bookings</a> <!-- New Button -->
                                         </td>
                                     </tr>
                                     <% }) %>

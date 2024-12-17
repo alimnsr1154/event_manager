@@ -23,11 +23,9 @@ const db = new sqlite3.Database('./database.db', (err) => {
 // Routes
 const mainRoutes = require('./routes/main');
 const eventRoutes = require('./routes/events');
-const userRoutes = require('./routes/users');
 
 app.use(mainRoutes);
 app.use('/events', eventRoutes);
-app.use('/users', userRoutes);
 
 
 // Error Handling Middleware
