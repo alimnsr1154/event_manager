@@ -7,8 +7,14 @@ const db = new sqlite3.Database('./database.db');
 
 // Main Home Page
 router.get('/', (req, res) => {
-    res.render('main-home');
+    db.get('SELECT name, description FROM site_settings WHERE id = 1', (err, settings) => {
+        if (err) {
+            return res.status(500).send('Error retrieving site settings');
+        }
+        res.render('main-home', { siteName: settings.name, siteDescription: settings.description });
+    });
 });
+
 
 // Site Settings Retrieval
 router.get('/site-settings', (req, res) => {
@@ -30,7 +36,7 @@ router.post('/site-settings', (req, res) => {
             if (err) {
                 return res.status(500).send('Error updating site settings');
             }
-            res.redirect('/organiser');
+            res.redirect('/events/organiser');
         }
     );
 });

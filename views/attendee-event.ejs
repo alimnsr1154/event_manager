@@ -5,6 +5,23 @@
     <meta charset="UTF-8">
     <title>Event Details</title>
     <link rel="stylesheet" href="/main.css">
+    <style>
+        input[type="text"],
+        input[type="number"],
+        button {
+            height: 40px;
+            /* Adjust the height as needed */
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            height: 50px;
+            /* Adjust the height as needed */
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,46 +37,27 @@
                 <%= new Date(event.event_date).toLocaleString() %>
             </p>
 
-            <div class="ticket-info">
-                <h2>Ticket Information</h2>
-                <div class="ticket-type">
-                    <p>Full Price Ticket: £<%= event.full_price_cost.toFixed(2) %>
-                    </p>
-                    <p>Available: <%= event.full_price_tickets %>
-                    </p>
-                </div>
-                <div class="ticket-type">
-                    <p>Concession Ticket: £<%= event.concession_price.toFixed(2) %>
-                    </p>
-                    <p>Available: <%= event.concession_tickets %>
-                    </p>
-                </div>
-            </div>
+            <h2>Ticket Information</h2>
+            <p>Full Price Tickets: £<%= event.full_price_cost.toFixed(2) %> (Remaining: <%= event.remaining_full_price
+                        %>)</p>
+            <p>Concession Tickets: £<%= event.concession_price.toFixed(2) %> (Remaining: <%= event.remaining_concession
+                        %>)</p>
 
             <form action="/events/book/<%= event.id %>" method="POST">
-                <div class="form-group">
-                    <label for="attendee_name">Your Name</label>
-                    <input type="text" id="attendee_name" name="attendee_name" required>
-                </div>
+                <label for="attendee_name">Your Name:</label>
+                <input type="text" id="attendee_name" name="attendee_name" required>
 
-                <div class="ticket-selection">
-                    <div class="form-group">
-                        <label for="full_price_tickets">Full Price Tickets</label>
-                        <input type="number" id="full_price_tickets" name="full_price_tickets" min="0"
-                            max="<%= event.full_price_tickets %>" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="concession_tickets">Concession Tickets</label>
-                        <input type="number" id="concession_tickets" name="concession_tickets" min="0"
-                            max="<%= event.concession_tickets %>" value="0">
-                    </div>
-                </div>
+                <label for="full_price_tickets">Full Price Tickets:</label>
+                <input type="number" id="full_price_tickets" name="full_price_tickets" min="0"
+                    max="<%= event.remaining_full_price %>" required>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Book Tickets</button>
-                    <a href="/events/attendee" class="btn">Back to Events</a>
-                </div>
+                <label for="concession_tickets">Concession Tickets:</label>
+                <input type="number" id="concession_tickets" name="concession_tickets" min="0"
+                    max="<%= event.remaining_concession %>" required>
+
+                <button type="submit">Book Tickets</button>
             </form>
+
         </div>
     </div>
 </body>

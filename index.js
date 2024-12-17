@@ -29,6 +29,7 @@ app.use(mainRoutes);
 app.use('/events', eventRoutes);
 app.use('/users', userRoutes);
 
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

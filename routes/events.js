@@ -1,4 +1,4 @@
-// routes/events.js
+// routes/event.js
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
@@ -15,9 +15,7 @@ router.get('/organiser', (req, res) => {
             END, 
             created_at DESC
     `, (err, events) => {
-        if (err) {
-            return res.status(500).send('Error retrieving events');
-        }
+        if (err) return res.status(500).send('Error retrieving events');
         res.render('organiser-home', { events });
     });
 });
@@ -41,9 +39,7 @@ router.get('/new', (req, res) => {
             concession_price, event_date
         ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `, Object.values(newEvent), function (err) {
-        if (err) {
-            return res.status(500).send('Error creating new event');
-        }
+        if (err) return res.status(500).send('Error creating new event');
         res.redirect(`/events/edit/${this.lastID}`);
     });
 });
@@ -51,9 +47,7 @@ router.get('/new', (req, res) => {
 // Edit Event Page
 router.get('/edit/:id', (req, res) => {
     db.get('SELECT * FROM events WHERE id = ?', [req.params.id], (err, event) => {
-        if (err) {
-            return res.status(500).send('Error retrieving event');
-        }
+        if (err) return res.status(500).send('Error retrieving event');
         res.render('organiser-event', { event });
     });
 });
@@ -80,9 +74,7 @@ router.post('/edit/:id', (req, res) => {
         concession_tickets, concession_price,
         event_date, req.params.id
     ], (err) => {
-        if (err) {
-            return res.status(500).send('Error updating event');
-        }
+        if (err) return res.status(500).send('Error updating event');
         res.redirect('/events/organiser');
     });
 });
@@ -95,9 +87,7 @@ router.post('/publish/:id', (req, res) => {
             published_at = CURRENT_TIMESTAMP 
         WHERE id = ?
     `, [req.params.id], (err) => {
-        if (err) {
-            return res.status(500).send('Error publishing event');
-        }
+        if (err) return res.status(500).send('Error publishing event');
         res.redirect('/events/organiser');
     });
 });
@@ -105,9 +95,7 @@ router.post('/publish/:id', (req, res) => {
 // Delete Event
 router.post('/delete/:id', (req, res) => {
     db.run('DELETE FROM events WHERE id = ?', [req.params.id], (err) => {
-        if (err) {
-            return res.status(500).send('Error deleting event');
-        }
+        if (err) return res.status(500).send('Error deleting event');
         res.redirect('/events/organiser');
     });
 });
@@ -119,19 +107,22 @@ router.get('/attendee', (req, res) => {
         WHERE status = 'published' 
         ORDER BY event_date ASC
     `, (err, events) => {
-        if (err) {
-            return res.status(500).send('Error retrieving events');
-        }
+        if (err) return res.status(500).send('Error retrieving events');
         res.render('attendee-home', { events });
     });
 });
 
-// Attendee Event Page
+// Attendee Event Page with Remaining Tickets
 router.get('/attendee/:id', (req, res) => {
-    db.get('SELECT * FROM events WHERE id = ?', [req.params.id], (err, event) => {
-        if (err) {
-            return res.status(500).send('Error retrieving event');
-        }
+    db.get(`
+        SELECT e.*, 
+        e.full_price_tickets - IFNULL(SUM(b.full_price_tickets), 0) AS remaining_full_price,
+        e.concession_tickets - IFNULL(SUM(b.concession_tickets), 0) AS remaining_concession
+        FROM events e
+        LEFT JOIN bookings b ON e.id = b.event_id
+        WHERE e.id = ?
+    `, [req.params.id], (err, event) => {
+        if (err) return res.status(500).send('Error retrieving event');
         res.render('attendee-event', { event });
     });
 });
@@ -154,10 +145,21 @@ router.post('/book/:id', (req, res) => {
         full_price_tickets,
         concession_tickets
     ], (err) => {
-        if (err) {
-            return res.status(500).send('Error booking event');
-        }
+        if (err) return res.status(500).send('Error booking tickets');
         res.redirect(`/events/attendee/${req.params.id}`);
+    });
+});
+
+// Organizer - View All Bookings for an Event
+router.get('/organiser/event/:id/bookings', (req, res) => {
+    db.all(`
+        SELECT b.id, b.attendee_name, b.full_price_tickets, 
+        b.concession_tickets, b.booking_date
+        FROM bookings b
+        WHERE b.event_id = ?
+    `, [req.params.id], (err, bookings) => {
+        if (err) return res.status(500).send('Error retrieving bookings');
+        res.render('organizer-bookings', { bookings, eventId: req.params.id });
     });
 });
 
